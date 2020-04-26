@@ -3,8 +3,6 @@ services:
   php:
     build: ./docker/php
     container_name: php
-#    environment:
-#      - COMPOSER_VERSION=1.10.3
     expose:
       - 9000
     volumes:

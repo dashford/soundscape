@@ -1,0 +1,13 @@
+{
+    "name": "dashford/soundscape",
+    "description": "Soundscape",
+    "license": "MIT",
+    "require": {
+        "slim/slim": "4.*",
+        "guzzlehttp/psr7": "^1.6",
+        "http-interop/http-factory-guzzle": "^1.0"
+    },
+    "autoload": {
+        "psr-4": {"Dashford\\Soundscape\\": "src/"}
+    }
+}
