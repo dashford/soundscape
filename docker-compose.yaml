@@ -3,6 +3,10 @@ services:
   php:
     build: ./docker/php
     container_name: php
+    environment:
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_NAME: ${DB_NAME}
     expose:
       - 9000
     volumes:
@@ -24,10 +28,13 @@ services:
       - ./docker/nginx/conf/soundscape.conf:/etc/nginx/conf.d/soundscape.conf:ro
 
   db:
-    build: ./docker/sqlite
+    image: mysql:8.0.19
     container_name: db
-    stdin_open: true
-    tty: true
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: soundscape
+      MYSQL_USER: soundscape
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
     volumes:
       - db-cache:/db
 
