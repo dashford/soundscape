@@ -1,10 +1,9 @@
 <?php
 
+use Dashford\Soundscape\Controller\ArtistController;
 use DI\Container;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Tools\Setup;
-use Psr\Http\Message\ResponseInterface as Response;
-use Psr\Http\Message\ServerRequestInterface as Request;
 use Slim\Factory\AppFactory;
 
 require __DIR__ . '/../vendor/autoload.php';
@@ -39,9 +38,6 @@ $container->set('entityManager', function () use ($entityManager) {
 AppFactory::setContainer($container);
 $app = AppFactory::create();
 
-$app->get('/', function (Request $request, Response $response, $args) {
-    $response->getBody()->write("Hello world!");
-    return $response;
-});
+$app->get('/artist/{name}', ArtistController::class . ':output');
 
 $app->run();
