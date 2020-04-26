@@ -1,0 +1,30 @@
+version: "3.7"
+services:
+  php:
+    build: ./docker/php
+    container_name: php
+#    environment:
+#      - COMPOSER_VERSION=1.10.3
+    expose:
+      - 9000
+    volumes:
+      - composer-cache:/root/composer/cache
+      - .:/var/www/html
+#      - type: volume
+#        source: ./docker/php/conf/php.ini
+#        target: /usr/local/etc/php/php.ini
+
+  nginx:
+    container_name: nginx
+    depends_on:
+      - php
+    image: nginx:1.17.9-alpine
+    ports:
+      - 80:80
+    volumes:
+      - .:/var/www/html
+      - ./docker/nginx/conf/soundscape.conf:/etc/nginx/conf.d/soundscape.conf:ro
+
+volumes:
+  composer-cache:
+    driver: local
