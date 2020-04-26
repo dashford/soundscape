@@ -23,6 +23,16 @@ services:
       - .:/var/www/html
       - ./docker/nginx/conf/soundscape.conf:/etc/nginx/conf.d/soundscape.conf:ro
 
+  db:
+    build: ./docker/sqlite
+    container_name: db
+    stdin_open: true
+    tty: true
+    volumes:
+      - db-cache:/db
+
 volumes:
   composer-cache:
+    driver: local
+  db-cache:
     driver: local
