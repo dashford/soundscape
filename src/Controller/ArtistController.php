@@ -12,6 +12,12 @@ class ArtistController
 
     }
 
+    public function saveArtist(Request $request, Response $response, array $args): Response
+    {
+        // go through service
+        return $response;
+    }
+
     public function output(Request $request, Response $response, array $args)
     {
         $response->getBody()->write("Controller for " . $args['name']);

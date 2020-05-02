@@ -1,5 +1,7 @@
 FROM php:7.4.4-fpm-alpine
 
+RUN docker-php-ext-install pdo pdo_mysql
+
 ENV COMPOSER_VERSION=1.10.5
 
 ENV COMPOSER_HOME /root/composer

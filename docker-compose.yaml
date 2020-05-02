@@ -35,6 +35,8 @@ services:
       MYSQL_DATABASE: soundscape
       MYSQL_USER: soundscape
       MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    ports:
+      - 3306:3306
     volumes:
       - db-cache:/db
 
