@@ -4,6 +4,9 @@ up :
 composer-install :
 	docker-compose exec php sh -c "composer validate && composer install"
 
+composer-require :
+	docker-compose exec php sh -c "composer require $(package)"
+
 doctrine-cli :
 	docker-compose exec php sh -c "vendor/bin/doctrine $(command)"
 

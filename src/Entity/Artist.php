@@ -36,9 +36,9 @@ class Artist
     private string $name;
 
     /**
-     * @PrePersist()
+     * @ORM\PrePersist()
      */
-    private function setCreationTimes(): void
+    public function setCreationTimes(): void
     {
         $now = new DateTime(null, new DateTimeZone('UTC'));
         $this->created = $now;
@@ -46,9 +46,9 @@ class Artist
     }
 
     /**
-     * @PreUpdate()
+     * @ORM\PreUpdate()
      */
-    private function setUpdated(): void
+    public function setUpdated(): void
     {
         $this->updated = new DateTime(null, new DateTimeZone('UTC'));
     }
