@@ -2,24 +2,25 @@
 
 namespace Dashford\Soundscape\Service;
 
-use Dashford\Soundscape\Entity\Artist;
+use Dashford\Soundscape\Entity\Artist as ArtistEntity;
 use Doctrine\ORM\EntityManagerInterface;
 
 class ArtistService
 {
     private EntityManagerInterface $entityManager;
 
-    private Artist $artist;
+    private ArtistEntity $artistEntity;
 
-    public function __construct(EntityManagerInterface $entityManager, Artist $artist)
+    public function __construct(EntityManagerInterface $entityManager, ArtistEntity $artistEntity)
     {
         $this->entityManager = $entityManager;
-        $this->artist = $artist;
+        $this->artistEntity = $artistEntity;
     }
 
-    public function save(array $values)
+    public function create(array $values)
     {
-        $this->artist->setName('blah');
+        // validation here
+        $this->artistEntity->setName('blah');
         var_dump($values);
     }
 }

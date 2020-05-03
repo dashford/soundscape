@@ -1,6 +1,6 @@
 <?php
 
-use Dashford\Soundscape\Controller\Artist\Save;
+use Dashford\Soundscape\Controller\Artist\Create;
 use Dashford\Soundscape\Middleware\JsonBodyParser;
 use Dashford\Soundscape\Service\ArtistService;
 use DI\Container;
@@ -30,8 +30,8 @@ $container->set('Dashford\Soundscape\Service\ArtistService', function (Container
         $c->get('Dashford\Soundscape\Entity\Artist')
     );
 });
-$container->set('Dashford\Soundscape\Controller\Artist\Save', function (ContainerInterface $c) {
-    return new Save(
+$container->set('Dashford\Soundscape\Controller\Artist\Create', function (ContainerInterface $c) {
+    return new Create(
         $c->get('Dashford\Soundscape\Service\ArtistService')
     );
 });
@@ -42,6 +42,6 @@ $app = AppFactory::create();
 
 $app->add(new JsonBodyParser());
 
-$app->post('/artist', Save::class);
+$app->post('/artist', Create::class);
 
 $app->run();

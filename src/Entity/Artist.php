@@ -22,13 +22,11 @@ class Artist
 
     /**
      * @ORM\Column(type="datetime")
-     * @var DateTime
      */
     private DateTime $created;
 
     /**
      * @ORM\Column(type="datetime")
-     * @var DateTime
      */
     private DateTime $updated;
 
