@@ -3,6 +3,7 @@
 namespace Dashford\Soundscape\Controller\Artist;
 
 use Dashford\Soundscape\Service\ArtistService;
+use Dashford\Soundscape\Value\HTTPStatus;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
@@ -19,6 +20,7 @@ class Create
     {
         $this->artistService->create($request->getParsedBody());
 
-        return $response;
+        return $response->withStatus(HTTPStatus::CREATED)
+            ->withHeader('Content-Type', 'application/json');
     }
 }
