@@ -3,6 +3,8 @@
 namespace Dashford\Soundscape\Service;
 
 use Dashford\Soundscape\Entity\Artist as ArtistEntity;
+use Dashford\Soundscape\Exception\ValidationException;
+use Dashford\Soundscape\Value\HTTPStatus;
 use Doctrine\ORM\EntityManagerInterface;
 use Respect\Validation\Exceptions\Exception;
 use Respect\Validation\Validator as v;
@@ -24,11 +26,11 @@ class ArtistService
         try {
             v::key('name', v::stringType())->assert($values);
         } catch (Exception $e) {
-            var_dump($e->getMessages());
+            throw new ValidationException('Validation failed', HTTPStatus::BAD_REQUEST, null, $e->getMessages());
         }
 
-        $this->artistEntity->setName($values['name']);
-        $this->entityManager->persist($this->artistEntity);
-        $this->entityManager->flush();
+//        $this->artistEntity->setName($values['name']);
+//        $this->entityManager->persist($this->artistEntity);
+//        $this->entityManager->flush();
     }
 }
