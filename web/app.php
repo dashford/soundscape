@@ -42,6 +42,15 @@ $containerBuilder->addDefinitions([
     }
 ]);
 $containerBuilder->addDefinitions([
+    'Neomerx\JsonApi\Encoder\Encoder' => function (ContainerInterface $c) {
+        return \Neomerx\JsonApi\Encoder\Encoder::instance([
+
+        ])
+        ->withUrlPrefix('https://soundscape.internal/api/v1')
+        ->withEncodeOptions(JSON_PRETTY_PRINT);
+    }
+]);
+$containerBuilder->addDefinitions([
     'entityManager'=> function () use ($entityManager) {
         return $entityManager;
     }
