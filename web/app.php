@@ -13,6 +13,7 @@ require __DIR__ . '/../vendor/autoload.php';
 
 $env = Dotenv\Dotenv::createImmutable(__DIR__ . '/..');
 $env->load();
+$env->required('DISPLAY_ERROR_DETAILS')->isBoolean();
 
 // Doctrine Config
 require_once __DIR__ . '/../config/doctrine-config.php';
@@ -22,16 +23,21 @@ $containerBuilder = new ContainerBuilder();
 
 $containerBuilder->addDefinitions([
     'settings' => [
-        'displayErrorDetails' => getenv('DISPLAY_ERROR_DETAILS'),
-        'logErrors' => getenv('LOG_ERRORS'),
-        'logErrorDetails' => getenv('LOG_ERROR_DETAILS')
+        'displayErrorDetails' => filter_var(getenv('DISPLAY_ERROR_DETAILS'), FILTER_VALIDATE_BOOLEAN),
+        'logErrors' => filter_var(getenv('LOG_ERRORS'), FILTER_VALIDATE_BOOLEAN),
+        'logErrorDetails' => filter_var(getenv('LOG_ERROR_DETAILS'), FILTER_VALIDATE_BOOLEAN),
+        'logger' => [
+            'level' => Logger::DEBUG
+        ]
     ]
 ]);
 
 $containerBuilder->addDefinitions([
     'Psr\Log\LoggerInterface' => function (ContainerInterface $c) {
         $logger = new \Monolog\Logger('soundscape');
-        $logger->pushHandler(new \Monolog\Handler\StreamHandler('php://stdout', Logger::DEBUG));
+        $logger->pushHandler(new \Monolog\Handler\StreamHandler('php://stdout', $c->get('settings')['logger']['level']));
+        $logger->pushProcessor(new \Monolog\Processor\WebProcessor());
+        $logger->pushProcessor(new \Monolog\Processor\UidProcessor());
         return $logger;
     }
 ]);

@@ -11,6 +11,16 @@ use Throwable;
 
 class ErrorHandler
 {
+    private CallableResolverInterface $callableResolver;
+
+    private ResponseFactoryInterface $responseFactory;
+
+    private LoggerInterface $logger;
+
+    private ServerRequestInterface $request;
+
+    private Throwable $exception;
+
     public function __construct(CallableResolverInterface $callableResolver, ResponseFactoryInterface $responseFactory, LoggerInterface $logger)
     {
         $this->callableResolver = $callableResolver;
@@ -20,11 +30,10 @@ class ErrorHandler
 
     public function __invoke(ServerRequestInterface $request, Throwable $exception, bool $displayErrorDetails, bool $logErrors, bool $logErrorDetails): ResponseInterface
     {
-        var_dump($displayErrorDetails);
+        $this->logger->info('boom');
         $this->request = $request;
         $this->exception = $exception;
 
-        $response = $this->responseFactory->createResponse(404);
-        return $response;
+        return $this->responseFactory->createResponse(404);
     }
 }
