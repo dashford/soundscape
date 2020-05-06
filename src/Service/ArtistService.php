@@ -2,21 +2,25 @@
 
 namespace Dashford\Soundscape\Service;
 
-use Dashford\Soundscape\Entity\Artist as ArtistEntity;
+use Dashford\Soundscape\Entity\Artist;
 use Dashford\Soundscape\Exception\ValidationException;
 use Dashford\Soundscape\Value\HTTPStatus;
 use Doctrine\ORM\EntityManagerInterface;
+use Psr\Log\LoggerInterface;
 use Respect\Validation\Exceptions\Exception;
 use Respect\Validation\Validator as v;
 
 class ArtistService
 {
+    private LoggerInterface $logger;
+
     private EntityManagerInterface $entityManager;
 
-    private ArtistEntity $artistEntity;
+    private Artist $artistEntity;
 
-    public function __construct(EntityManagerInterface $entityManager, ArtistEntity $artistEntity)
+    public function __construct(LoggerInterface $logger, EntityManagerInterface $entityManager, Artist $artistEntity)
     {
+        $this->logger = $logger;
         $this->entityManager = $entityManager;
         $this->artistEntity = $artistEntity;
     }

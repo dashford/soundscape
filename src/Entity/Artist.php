@@ -5,6 +5,7 @@ namespace Dashford\Soundscape\Entity;
 use DateTime;
 use DateTimeZone;
 use Doctrine\ORM\Mapping as ORM;
+use Psr\Log\LoggerInterface;
 
 /**
  * @ORM\Entity
@@ -13,6 +14,8 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Artist
 {
+    private LoggerInterface $logger;
+
     /**
      * @ORM\Id
      * @ORM\Column(type="string")
@@ -34,6 +37,11 @@ class Artist
      * @ORM\Column(type="string")
      */
     private string $name;
+
+    public function __construct(LoggerInterface $logger)
+    {
+        $this->logger = $logger;
+    }
 
     /**
      * @ORM\PrePersist()

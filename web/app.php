@@ -47,13 +47,14 @@ $containerBuilder->addDefinitions([
     }
 ]);
 $containerBuilder->addDefinitions([
-    'Dashford\Soundscape\Entity\Artist' => function () {
-        return new Dashford\Soundscape\Entity\Artist();
+    'Dashford\Soundscape\Entity\Artist' => function (ContainerInterface $c) {
+        return new Dashford\Soundscape\Entity\Artist($c->get('Psr\Log\LoggerInterface'));
     }
 ]);
 $containerBuilder->addDefinitions([
     'Dashford\Soundscape\Service\ArtistService' => function (ContainerInterface $c) {
         return new ArtistService(
+            $c->get('Psr\Log\LoggerInterface'),
             $c->get('entityManager'),
             $c->get('Dashford\Soundscape\Entity\Artist')
         );
@@ -62,6 +63,7 @@ $containerBuilder->addDefinitions([
 $containerBuilder->addDefinitions([
     'Dashford\Soundscape\Controller\Artist\Create' => function (ContainerInterface $c) {
         return new Create(
+            $c->get('Psr\Log\LoggerInterface'),
             $c->get('Dashford\Soundscape\Service\ArtistService')
         );
     }
