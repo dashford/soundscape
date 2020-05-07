@@ -27,9 +27,9 @@ services:
       - .:/var/www/html
       - ./docker/nginx/conf/soundscape.conf:/etc/nginx/conf.d/soundscape.conf:ro
 
-  db:
+  mysql:
     image: mysql:8.0.19
-    container_name: db
+    container_name: mysql
     environment:
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
       MYSQL_DATABASE: soundscape
@@ -38,10 +38,10 @@ services:
     ports:
       - 3306:3306
     volumes:
-      - db-cache:/db
+      - mysql-cache:/db
 
 volumes:
   composer-cache:
     driver: local
-  db-cache:
+  mysql-cache:
     driver: local
