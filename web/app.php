@@ -27,7 +27,8 @@ $containerBuilder->addDefinitions([
         'logErrors' => filter_var(getenv('LOG_ERRORS'), FILTER_VALIDATE_BOOLEAN),
         'logErrorDetails' => filter_var(getenv('LOG_ERROR_DETAILS'), FILTER_VALIDATE_BOOLEAN),
         'logger' => [
-            'level' => Logger::DEBUG
+            'level' => Logger::DEBUG,
+            'uidProcessorLength' => 16
         ]
     ]
 ]);
@@ -37,8 +38,13 @@ $containerBuilder->addDefinitions([
         $logger = new \Monolog\Logger('soundscape');
         $logger->pushHandler(new \Monolog\Handler\StreamHandler('php://stdout', $c->get('settings')['logger']['level']));
         $logger->pushProcessor(new \Monolog\Processor\WebProcessor());
-        $logger->pushProcessor(new \Monolog\Processor\UidProcessor());
+        $logger->pushProcessor($c->get('Monolog\Processor\UidProcessor'));
         return $logger;
+    }
+]);
+$containerBuilder->addDefinitions([
+    'Monolog\Processor\UidProcessor' => function (ContainerInterface $c) {
+        return new \Monolog\Processor\UidProcessor($c->get('settings')['logger']['uidProcessorLength']);
     }
 ]);
 $containerBuilder->addDefinitions([
@@ -48,6 +54,14 @@ $containerBuilder->addDefinitions([
         ])
         ->withUrlPrefix('https://soundscape.internal/api/v1')
         ->withEncodeOptions(JSON_PRETTY_PRINT);
+    }
+]);
+$containerBuilder->addDefinitions([
+    'Dashford\Soundscape\Response\JsonApiResponse' => function (ContainerInterface $c) {
+        return new \Dashford\Soundscape\Response\JsonApiResponse(
+            $c->get('Neomerx\JsonApi\Contracts\Encoder\EncoderInterface'),
+            $c->get('Monolog\Processor\UidProcessor')
+        );
     }
 ]);
 $containerBuilder->addDefinitions([
@@ -73,7 +87,7 @@ $containerBuilder->addDefinitions([
     'Dashford\Soundscape\Controller\Artist\Create' => function (ContainerInterface $c) {
         return new Create(
             $c->get('Psr\Log\LoggerInterface'),
-            $c->get('Neomerx\JsonApi\Contracts\Encoder\EncoderInterface'),
+            $c->get('Dashford\Soundscape\Response\JsonApiResponse'),
             $c->get('Dashford\Soundscape\Service\ArtistService')
         );
     }

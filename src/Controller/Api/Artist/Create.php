@@ -2,6 +2,7 @@
 
 namespace Dashford\Soundscape\Controller\Api\Artist;
 
+use Dashford\Soundscape\Response\JsonApiResponse;
 use Dashford\Soundscape\Service\ArtistService;
 use Dashford\Soundscape\Value\HTTPStatus;
 use Neomerx\JsonApi\Contracts\Encoder\EncoderInterface;
@@ -13,14 +14,14 @@ class Create
 {
     private LoggerInterface $logger;
 
-    private EncoderInterface $encoder;
+    private JsonApiResponse $jsonApiResponse;
 
     private ArtistService $artistService;
 
-    public function __construct(LoggerInterface $logger, EncoderInterface $encoder, ArtistService $artistService)
+    public function __construct(LoggerInterface $logger, JsonApiResponse $jsonApiResponse, ArtistService $artistService)
     {
         $this->logger = $logger;
-        $this->encoder = $encoder;
+        $this->jsonApiResponse = $jsonApiResponse;
         $this->artistService = $artistService;
     }
 
@@ -28,10 +29,9 @@ class Create
     {
         $artist = $this->artistService->create($request->getParsedBody());
 
-        var_dump($this->encoder->encodeData($artist));
-
-        return $response->withStatus(HTTPStatus::CREATED)
-            ->withBody($this->encoder->encodeData($artist))
-            ->withHeader('Content-Type', 'application/json');
+        return $this->jsonApiResponse->buildResponse($response)
+            ->withData($artist)
+            ->withStatus(HTTPStatus::CREATED)
+            ->respond();
     }
 }
