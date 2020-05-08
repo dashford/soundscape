@@ -16,13 +16,13 @@ class ArtistService
 
     private EntityManagerInterface $entityManager;
 
-    private Artist $artistEntity;
+    private Artist $artist;
 
-    public function __construct(LoggerInterface $logger, EntityManagerInterface $entityManager, Artist $artistEntity)
+    public function __construct(LoggerInterface $logger, EntityManagerInterface $entityManager, Artist $artist)
     {
         $this->logger = $logger;
         $this->entityManager = $entityManager;
-        $this->artistEntity = $artistEntity;
+        $this->artist = $artist;
     }
 
     public function create(array $values)
@@ -33,8 +33,10 @@ class ArtistService
             throw new ValidationException('Validation failed', HTTPStatus::BAD_REQUEST, null, $e->getMessages());
         }
 
-//        $this->artistEntity->setName($values['name']);
-//        $this->entityManager->persist($this->artistEntity);
-//        $this->entityManager->flush();
+        $this->artist->setName($values['name']);
+        $this->entityManager->persist($this->artist);
+        $this->entityManager->flush();
+
+        return $this->artist;
     }
 }

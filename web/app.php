@@ -42,9 +42,9 @@ $containerBuilder->addDefinitions([
     }
 ]);
 $containerBuilder->addDefinitions([
-    'Neomerx\JsonApi\Encoder\Encoder' => function (ContainerInterface $c) {
+    'Neomerx\JsonApi\Contracts\Encoder\EncoderInterface' => function (ContainerInterface $c) {
         return \Neomerx\JsonApi\Encoder\Encoder::instance([
-
+            'Dashford\Soundscape\Entity\Artist' => 'Dashford\Soundscape\Schema\ArtistSchema'
         ])
         ->withUrlPrefix('https://soundscape.internal/api/v1')
         ->withEncodeOptions(JSON_PRETTY_PRINT);
@@ -73,6 +73,7 @@ $containerBuilder->addDefinitions([
     'Dashford\Soundscape\Controller\Artist\Create' => function (ContainerInterface $c) {
         return new Create(
             $c->get('Psr\Log\LoggerInterface'),
+            $c->get('Neomerx\JsonApi\Contracts\Encoder\EncoderInterface'),
             $c->get('Dashford\Soundscape\Service\ArtistService')
         );
     }
@@ -100,6 +101,6 @@ $errorMiddleware->setDefaultErrorHandler(
 
 $app->add(new JsonBodyParser());
 
-$app->post('/artist', Create::class);
+$app->post('/api/v1/artist', Create::class);
 
 $app->run();

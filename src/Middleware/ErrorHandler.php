@@ -34,6 +34,8 @@ class ErrorHandler
         $this->request = $request;
         $this->exception = $exception;
 
-        return $this->responseFactory->createResponse(404);
+        var_dump($this->exception->getMessage());
+
+        return $this->responseFactory->createResponse(400);
     }
 }
