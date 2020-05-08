@@ -25,7 +25,7 @@ class ArtistService
         $this->artist = $artist;
     }
 
-    public function create(array $values)
+    public function create(array $values): Artist
     {
         try {
             v::key('name', v::stringType())->assert($values);

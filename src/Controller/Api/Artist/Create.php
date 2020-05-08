@@ -1,6 +1,6 @@
 <?php
 
-namespace Dashford\Soundscape\Controller\Artist;
+namespace Dashford\Soundscape\Controller\Api\Artist;
 
 use Dashford\Soundscape\Service\ArtistService;
 use Dashford\Soundscape\Value\HTTPStatus;
@@ -31,7 +31,7 @@ class Create
         var_dump($this->encoder->encodeData($artist));
 
         return $response->withStatus(HTTPStatus::CREATED)
-//            ->withBody($this->encoder->encodeData($artist))
+            ->withBody($this->encoder->encodeData($artist))
             ->withHeader('Content-Type', 'application/json');
     }
 }

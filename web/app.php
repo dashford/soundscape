@@ -1,6 +1,6 @@
 <?php
 
-use Dashford\Soundscape\Controller\Artist\Create;
+use Dashford\Soundscape\Controller\Api\Artist\Create;
 use Dashford\Soundscape\Middleware\ErrorHandler;
 use Dashford\Soundscape\Middleware\JsonBodyParser;
 use Dashford\Soundscape\Service\ArtistService;
