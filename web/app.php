@@ -1,7 +1,6 @@
 <?php
 
 use Dashford\Soundscape\Controller\Api\Artist\Create;
-use Dashford\Soundscape\Middleware\ErrorHandler;
 use Dashford\Soundscape\Middleware\JsonBodyParser;
 use Dashford\Soundscape\Service\ArtistService;
 use DI\ContainerBuilder;
@@ -57,8 +56,8 @@ $containerBuilder->addDefinitions([
     }
 ]);
 $containerBuilder->addDefinitions([
-    'Dashford\Soundscape\Response\JsonApiResponse' => function (ContainerInterface $c) {
-        return new \Dashford\Soundscape\Response\JsonApiResponse(
+    'Dashford\Soundscape\Renderer\JsonApiRenderer' => function (ContainerInterface $c) {
+        return new \Dashford\Soundscape\Renderer\JsonApiRenderer(
             $c->get('Neomerx\JsonApi\Contracts\Encoder\EncoderInterface'),
             $c->get('Monolog\Processor\UidProcessor')
         );
@@ -87,8 +86,16 @@ $containerBuilder->addDefinitions([
     'Dashford\Soundscape\Controller\Artist\Create' => function (ContainerInterface $c) {
         return new Create(
             $c->get('Psr\Log\LoggerInterface'),
-            $c->get('Dashford\Soundscape\Response\JsonApiResponse'),
+            $c->get('Dashford\Soundscape\Renderer\JsonApiRenderer'),
             $c->get('Dashford\Soundscape\Service\ArtistService')
+        );
+    }
+]);
+$containerBuilder->addDefinitions([
+    'Dashford\Soundscape\Renderer\JsonApiErrorRenderer' => function (ContainerInterface $c) {
+        return new \Dashford\Soundscape\Renderer\JsonApiErrorRenderer(
+            $c->get('Neomerx\JsonApi\Contracts\Encoder\EncoderInterface'),
+            $c->get('Monolog\Processor\UidProcessor')
         );
     }
 ]);
@@ -106,15 +113,9 @@ $errorMiddleware = $app->addErrorMiddleware(
     $container->get('settings')['logErrorDetails'],
     $container->get('Psr\Log\LoggerInterface')
 );
-$errorMiddleware->setDefaultErrorHandler(
-    new ErrorHandler(
-        $app->getCallableResolver(),
-        $app->getResponseFactory(),
-        $container->get('Psr\Log\LoggerInterface'),
-        $container->get('Neomerx\JsonApi\Contracts\Encoder\EncoderInterface'),
-        $container->get('Monolog\Processor\UidProcessor')
-    )
-);
+
+$errorHandler = $errorMiddleware->getDefaultErrorHandler();
+$errorHandler->registerErrorRenderer('application/json', $container->get('Dashford\Soundscape\Renderer\JsonApiErrorRenderer'));
 
 $app->add(new JsonBodyParser());
 

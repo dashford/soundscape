@@ -1,13 +1,12 @@
 <?php
 
-namespace Dashford\Soundscape\Response;
+namespace Dashford\Soundscape\Renderer;
 
-use Dashford\Soundscape\Value\HTTPStatus;
 use Monolog\Processor\UidProcessor;
 use Neomerx\JsonApi\Contracts\Encoder\EncoderInterface;
 use Psr\Http\Message\ResponseInterface as Response;
 
-class JsonApiResponse
+class JsonApiRenderer
 {
     // TODO
     // Introduce types for all these parameters
@@ -30,28 +29,28 @@ class JsonApiResponse
         $this->uidProcessor = $uidProcessor;
     }
 
-    public function buildResponse(Response $response): JsonApiResponse
+    public function buildResponse(Response $response): JsonApiRenderer
     {
         $this->response= $response;
 
         return $this;
     }
 
-    public function withData($data): JsonApiResponse
+    public function withData($data): JsonApiRenderer
     {
         $this->data = $data;
 
         return $this;
     }
 
-    public function withMeta(array $meta): JsonApiResponse
+    public function withMeta(array $meta): JsonApiRenderer
     {
         $this->meta = $meta;
 
         return $this;
     }
 
-    public function withStatus(int $status): JsonApiResponse
+    public function withStatus(int $status): JsonApiRenderer
     {
         $this->status = $status;
 
