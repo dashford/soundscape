@@ -2,6 +2,7 @@
 
 namespace Dashford\Soundscape\Middleware;
 
+use Dashford\Soundscape\Value\HTTPStatus;
 use Neomerx\JsonApi\Contracts\Encoder\EncoderInterface;
 use Neomerx\JsonApi\Schema\Error;
 use Psr\Http\Message\ResponseFactoryInterface;
@@ -35,17 +36,18 @@ class ErrorHandler
 
     public function __invoke(ServerRequestInterface $request, Throwable $exception, bool $displayErrorDetails, bool $logErrors, bool $logErrorDetails): ResponseInterface
     {
-        $error = new Error(
-            'some-id'
-        );
-
-        var_dump($this->encoder->encodeError($error));
         $this->logger->info('boom');
         $this->request = $request;
         $this->exception = $exception;
 
-        var_dump($this->exception->getMessage());
+        $error = new Error(
+            'some-id'
+        );
 
-        return $this->responseFactory->createResponse(400);
+        $response =  $this->responseFactory->createResponse();
+        $response->getBody()->write($this->encoder->encodeError($error));
+
+        return $response->withStatus($this->exception->getCode())
+            ->withHeader('Content-Type', 'application/json');
     }
 }
