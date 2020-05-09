@@ -107,10 +107,12 @@ $errorMiddleware = $app->addErrorMiddleware(
     $container->get('Psr\Log\LoggerInterface')
 );
 $errorMiddleware->setDefaultErrorHandler(
-    new ErrorHandler($app->getCallableResolver(),
+    new ErrorHandler(
+        $app->getCallableResolver(),
         $app->getResponseFactory(),
         $container->get('Psr\Log\LoggerInterface'),
-        $container->get('Neomerx\JsonApi\Contracts\Encoder\EncoderInterface')
+        $container->get('Neomerx\JsonApi\Contracts\Encoder\EncoderInterface'),
+        $container->get('Monolog\Processor\UidProcessor')
     )
 );
 

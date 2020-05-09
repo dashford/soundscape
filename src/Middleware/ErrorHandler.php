@@ -2,7 +2,7 @@
 
 namespace Dashford\Soundscape\Middleware;
 
-use Dashford\Soundscape\Value\HTTPStatus;
+use Monolog\Processor\UidProcessor;
 use Neomerx\JsonApi\Contracts\Encoder\EncoderInterface;
 use Neomerx\JsonApi\Schema\Error;
 use Psr\Http\Message\ResponseFactoryInterface;
@@ -22,26 +22,34 @@ class ErrorHandler
 
     private EncoderInterface $encoder;
 
+    private UidProcessor $uidProcessor;
+
     private ServerRequestInterface $request;
 
     private Throwable $exception;
 
-    public function __construct(CallableResolverInterface $callableResolver, ResponseFactoryInterface $responseFactory, LoggerInterface $logger, EncoderInterface $encoder)
+    public function __construct(CallableResolverInterface $callableResolver, ResponseFactoryInterface $responseFactory, LoggerInterface $logger, EncoderInterface $encoder, UidProcessor $uidProcessor)
     {
         $this->callableResolver = $callableResolver;
         $this->responseFactory = $responseFactory;
         $this->logger = $logger;
         $this->encoder = $encoder;
+        $this->uidProcessor = $uidProcessor;
     }
 
     public function __invoke(ServerRequestInterface $request, Throwable $exception, bool $displayErrorDetails, bool $logErrors, bool $logErrorDetails): ResponseInterface
     {
-        $this->logger->info('boom');
         $this->request = $request;
         $this->exception = $exception;
 
         $error = new Error(
-            'some-id'
+            $this->uidProcessor->getUid(),
+            null,
+            null,
+            $this->exception->getCode(),
+            'code',
+            $this->exception->getMessage(),
+            'detail'
         );
 
         $response =  $this->responseFactory->createResponse();
