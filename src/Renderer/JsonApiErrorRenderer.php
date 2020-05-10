@@ -27,7 +27,7 @@ class JsonApiErrorRenderer implements ErrorRendererInterface
             null,
             null,
             $exception->getCode(),
-            'code',
+            null,
             $exception->getMessage(),
             'detail'
         );

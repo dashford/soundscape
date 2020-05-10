@@ -9,6 +9,7 @@ use Psr\Log\LoggerInterface;
 
 /**
  * @ORM\Entity
+ * @ORM\Entity(repositoryClass="ArtistRepository")
  * @ORM\Table(name="artists")
  * @ORM\HasLifecycleCallbacks()
  */

@@ -6,11 +6,10 @@ use Dashford\Soundscape\Exception\ValidationException;
 use Dashford\Soundscape\Renderer\JsonApiRenderer;
 use Dashford\Soundscape\Service\ArtistService;
 use Dashford\Soundscape\Value\HTTPStatus;
-use Neomerx\JsonApi\Contracts\Encoder\EncoderInterface;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Log\LoggerInterface;
-use Slim\Exception\HttpForbiddenException;
+use Slim\Exception\HttpBadRequestException;
 
 class Create
 {
@@ -33,7 +32,7 @@ class Create
             $artist = $this->artistService->create($request->getParsedBody());
         } catch (ValidationException $e) {
             $this->logger->error('error');
-            throw new HttpForbiddenException($request);
+            throw new HttpBadRequestException($request, 'Validation failed', $e);
         }
 
         return $this->jsonApiResponse->buildResponse($response)
