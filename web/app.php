@@ -78,6 +78,7 @@ $containerBuilder->addDefinitions([
         return new ArtistService(
             $c->get('Psr\Log\LoggerInterface'),
             $c->get('entityManager'),
+            $c->get('Psr\EventDispatcher\EventDispatcherInterface'),
             $c->get('Dashford\Soundscape\Entity\Artist')
         );
     }
@@ -97,6 +98,19 @@ $containerBuilder->addDefinitions([
             $c->get('Neomerx\JsonApi\Contracts\Encoder\EncoderInterface'),
             $c->get('Monolog\Processor\UidProcessor')
         );
+    }
+]);
+$containerBuilder->addDefinitions([
+    'Dashford\Soundscape\Subscriber\ArtistSubscriber' => function () {
+        return new \Dashford\Soundscape\Subscriber\ArtistSubscriber();
+    }
+]);
+$containerBuilder->addDefinitions([
+    'Psr\EventDispatcher\EventDispatcherInterface' => function (ContainerInterface $c) {
+        $dispatcher = new Symfony\Component\EventDispatcher\EventDispatcher();
+        $dispatcher->addSubscriber($c->get('Dashford\Soundscape\Subscriber\ArtistSubscriber'));
+
+        return $dispatcher;
     }
 ]);
 
