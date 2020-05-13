@@ -69,8 +69,8 @@ $containerBuilder->addDefinitions([
     }
 ]);
 $containerBuilder->addDefinitions([
-    'Dashford\Soundscape\Entity\Artist' => function (ContainerInterface $c) {
-        return new Dashford\Soundscape\Entity\Artist($c->get('Psr\Log\LoggerInterface'));
+    'Dashford\Soundscape\Factory\ArtistFactory' => function (ContainerInterface $c) {
+        return new \Dashford\Soundscape\Factory\ArtistFactory($c->get('Psr\Log\LoggerInterface'));
     }
 ]);
 $containerBuilder->addDefinitions([
@@ -78,8 +78,8 @@ $containerBuilder->addDefinitions([
         return new ArtistService(
             $c->get('Psr\Log\LoggerInterface'),
             $c->get('entityManager'),
-            $c->get('Psr\EventDispatcher\EventDispatcherInterface'),
-            $c->get('Dashford\Soundscape\Entity\Artist')
+            $c->get('Symfony\Component\EventDispatcher\EventDispatcherInterface'),
+            $c->get('Dashford\Soundscape\Factory\ArtistFactory')
         );
     }
 ]);
@@ -106,7 +106,7 @@ $containerBuilder->addDefinitions([
     }
 ]);
 $containerBuilder->addDefinitions([
-    'Psr\EventDispatcher\EventDispatcherInterface' => function (ContainerInterface $c) {
+    'Symfony\Component\EventDispatcher\EventDispatcherInterface' => function (ContainerInterface $c) {
         $dispatcher = new Symfony\Component\EventDispatcher\EventDispatcher();
         $dispatcher->addSubscriber($c->get('Dashford\Soundscape\Subscriber\ArtistSubscriber'));
 

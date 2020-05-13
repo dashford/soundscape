@@ -5,9 +5,10 @@ namespace Dashford\Soundscape\Service;
 use Dashford\Soundscape\Entity\Artist;
 use Dashford\Soundscape\Event\ArtistCreatedEvent;
 use Dashford\Soundscape\Exception\ValidationException;
+use Dashford\Soundscape\Factory\ArtistFactory;
 use Dashford\Soundscape\Value\HTTPStatus;
 use Doctrine\ORM\EntityManagerInterface;
-use Psr\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Psr\Log\LoggerInterface;
 use Respect\Validation\Exceptions\Exception;
 use Respect\Validation\Validator as v;
@@ -20,14 +21,14 @@ class ArtistService
 
     private EventDispatcherInterface $eventDispatcher;
 
-    private Artist $artist;
+    private ArtistFactory $artistFactory;
 
-    public function __construct(LoggerInterface $logger, EntityManagerInterface $entityManager, EventDispatcherInterface $eventDispatcher, Artist $artist)
+    public function __construct(LoggerInterface $logger, EntityManagerInterface $entityManager, EventDispatcherInterface $eventDispatcher, ArtistFactory $artistFactory)
     {
         $this->logger = $logger;
         $this->entityManager = $entityManager;
         $this->eventDispatcher = $eventDispatcher;
-        $this->artist = $artist;
+        $this->artistFactory = $artistFactory;
     }
 
     public function create(array $values): Artist
@@ -38,12 +39,14 @@ class ArtistService
             throw new ValidationException('Validation failed', HTTPStatus::BAD_REQUEST, null, $e->getMessages());
         }
 
-        $this->artist->setName($values['name']);
-        $this->entityManager->persist($this->artist);
+        $artist = $this->artistFactory->createArtist();
+
+        $artist->setName($values['name']);
+        $this->entityManager->persist($artist);
         $this->entityManager->flush();
 
-        $this->eventDispatcher->dispatch(new ArtistCreatedEvent($this->artist), ArtistCreatedEvent::NAME);
+        $this->eventDispatcher->dispatch(new ArtistCreatedEvent($artist), ArtistCreatedEvent::NAME);
 
-        return $this->artist;
+        return $artist;
     }
 }

@@ -8,8 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Psr\Log\LoggerInterface;
 
 /**
- * @ORM\Entity
- * @ORM\Entity(repositoryClass="ArtistRepository")
+ * @ORM\Entity(repositoryClass="Dashford\Soundscape\Repository\ArtistRepository")
  * @ORM\Table(name="artists")
  * @ORM\HasLifecycleCallbacks()
  */
