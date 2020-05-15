@@ -5,7 +5,7 @@ namespace Dashford\Soundscape\Exception;
 use Exception;
 use Throwable;
 
-class ValidationException extends Exception
+class ValidationException extends Exception implements ExtendedDetailException
 {
     private array $invalidRules = [];
 
@@ -15,8 +15,8 @@ class ValidationException extends Exception
         $this->invalidRules = $invalidRules;
     }
 
-    public function getInvalidRules(): array
+    public function getDetail(): string
     {
-        return $this->invalidRules;
+        return implode('\n', $this->invalidRules);
     }
 }

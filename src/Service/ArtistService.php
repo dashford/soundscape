@@ -8,6 +8,7 @@ use Dashford\Soundscape\Exception\ValidationException;
 use Dashford\Soundscape\Factory\ArtistFactory;
 use Dashford\Soundscape\Value\HTTPStatus;
 use Doctrine\ORM\EntityManagerInterface;
+use Slim\Exception\HttpNotFoundException;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Psr\Log\LoggerInterface;
 use Respect\Validation\Exceptions\Exception;

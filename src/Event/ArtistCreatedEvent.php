@@ -16,7 +16,7 @@ class ArtistCreatedEvent extends Event
         $this->artist = $artist;
     }
 
-    public function getArtist()
+    public function getArtist(): Artist
     {
         return $this->artist;
     }
