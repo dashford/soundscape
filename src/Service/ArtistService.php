@@ -8,7 +8,6 @@ use Dashford\Soundscape\Exception\ValidationException;
 use Dashford\Soundscape\Factory\ArtistFactory;
 use Dashford\Soundscape\Value\HTTPStatus;
 use Doctrine\ORM\EntityManagerInterface;
-use Slim\Exception\HttpNotFoundException;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Psr\Log\LoggerInterface;
 use Respect\Validation\Exceptions\Exception;
@@ -34,8 +33,17 @@ class ArtistService
 
     public function create(array $values): Artist
     {
+        // images {}
+        // tags {}
         try {
             v::key('name', v::stringType())->assert($values);
+            v::key('musicbrainz_id', v::uuid(4), false)->assert($values);
+            if (isset($values['bio'])) {
+                v::keySet(
+                    v::key('summary', v::stringType()),
+                    v::key('content', v::stringType())
+                )->assert($values['bio']);
+            }
         } catch (Exception $e) {
             throw new ValidationException('Validation failed', HTTPStatus::BAD_REQUEST, null, $e->getMessages());
         }
