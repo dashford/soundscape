@@ -6,6 +6,7 @@ use DateTime;
 use DateTimeZone;
 use Doctrine\ORM\Mapping as ORM;
 use Psr\Log\LoggerInterface;
+use Respect\Validation\Validator as v;
 
 /**
  * @ORM\Entity(repositoryClass="Dashford\Soundscape\Repository\ArtistRepository")
@@ -37,6 +38,11 @@ class Artist
      * @ORM\Column(type="string")
      */
     private string $name;
+
+    /**
+     * @ORM\Column(type="string")
+     */
+    private string $musicbrainzId;
 
     public function __construct(LoggerInterface $logger)
     {
@@ -84,5 +90,16 @@ class Artist
     public function getName(): string
     {
         return $this->name;
+    }
+
+    public function setMusicbrainzId(string $musicbrainzId): void
+    {
+        v::uuid(4)->assert($musicbrainzId);
+        $this->musicbrainzId = $musicbrainzId;
+    }
+
+    public function getMusicbrainzId(): string
+    {
+        return $this->musicbrainzId;
     }
 }

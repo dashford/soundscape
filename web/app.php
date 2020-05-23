@@ -49,7 +49,7 @@ $containerBuilder->addDefinitions([
 $containerBuilder->addDefinitions([
     'Neomerx\JsonApi\Contracts\Encoder\EncoderInterface' => function (ContainerInterface $c) {
         return \Neomerx\JsonApi\Encoder\Encoder::instance([
-            'Dashford\Soundscape\Entity\Artist' => 'Dashford\Soundscape\Schema\ArtistSchema'
+            'Dashford\Soundscape\Entity\Artist' => 'Dashford\Soundscape\Schema\JsonApi\Artist'
         ])
         ->withUrlPrefix('https://soundscape.internal/api/v1')
         ->withEncodeOptions(JSON_PRETTY_PRINT);

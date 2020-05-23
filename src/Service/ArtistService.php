@@ -10,7 +10,7 @@ use Dashford\Soundscape\Value\HTTPStatus;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Psr\Log\LoggerInterface;
-use Respect\Validation\Exceptions\Exception;
+use Respect\Validation\Exceptions\Exception as ExtendedValidationException;
 use Respect\Validation\Validator as v;
 
 class ArtistService
@@ -33,24 +33,20 @@ class ArtistService
 
     public function create(array $values): Artist
     {
-        // images {}
-        // tags {}
+        if (isset($values['name']) === false) {
+            throw new ValidationException('Validation failed', HTTPStatus::BAD_REQUEST, null, ['Missing name key']);
+        }
+
         try {
-            v::key('name', v::stringType())->assert($values);
-            v::key('musicbrainz_id', v::uuid(4), false)->assert($values);
-            if (isset($values['bio'])) {
-                v::keySet(
-                    v::key('summary', v::stringType()),
-                    v::key('content', v::stringType())
-                )->assert($values['bio']);
+            $artist = $this->artistFactory->createArtist();
+            $artist->setName($values['name']);
+            if (isset($values['musicbrainz_id'])) {
+                $artist->setMusicbrainzId($values['musicbrainz_id']);
             }
-        } catch (Exception $e) {
+        } catch (ExtendedValidationException $e) {
             throw new ValidationException('Validation failed', HTTPStatus::BAD_REQUEST, null, $e->getMessages());
         }
 
-        $artist = $this->artistFactory->createArtist();
-
-        $artist->setName($values['name']);
         $this->entityManager->persist($artist);
         $this->entityManager->flush();
 

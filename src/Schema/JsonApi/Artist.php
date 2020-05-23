@@ -1,11 +1,11 @@
 <?php
 
-namespace Dashford\Soundscape\Schema;
+namespace Dashford\Soundscape\Schema\JsonApi;
 
 use Neomerx\JsonApi\Contracts\Schema\ContextInterface;
 use Neomerx\JsonApi\Schema\BaseSchema;
 
-class ArtistSchema extends BaseSchema
+class Artist extends BaseSchema
 {
     public function getType(): string
     {
