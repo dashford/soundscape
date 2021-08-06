@@ -74,6 +74,11 @@ $containerBuilder->addDefinitions([
     }
 ]);
 $containerBuilder->addDefinitions([
+    'Dashford\Soundscape\Schema\Soundscape\Artist' => function (ContainerInterface $c) {
+        return new \Dashford\Soundscape\Schema\Soundscape\Artist();
+    }
+]);
+$containerBuilder->addDefinitions([
     'Dashford\Soundscape\Service\ArtistService' => function (ContainerInterface $c) {
         return new ArtistService(
             $c->get('Psr\Log\LoggerInterface'),
@@ -88,6 +93,7 @@ $containerBuilder->addDefinitions([
         return new Create(
             $c->get('Psr\Log\LoggerInterface'),
             $c->get('Dashford\Soundscape\Renderer\JsonApiRenderer'),
+            $c->get('Dashford\Soundscape\Schema\Soundscape\Artist'),
             $c->get('Dashford\Soundscape\Service\ArtistService')
         );
     }

@@ -6,12 +6,12 @@ use Dashford\Soundscape\Entity\Artist;
 use Dashford\Soundscape\Event\ArtistCreatedEvent;
 use Dashford\Soundscape\Exception\ValidationException;
 use Dashford\Soundscape\Factory\ArtistFactory;
+use Dashford\Soundscape\Schema\Soundscape\Artist as ArtistSchema;
 use Dashford\Soundscape\Value\HTTPStatus;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Psr\Log\LoggerInterface;
 use Respect\Validation\Exceptions\Exception as ExtendedValidationException;
-use Respect\Validation\Validator as v;
 
 class ArtistService
 {
@@ -31,8 +31,13 @@ class ArtistService
         $this->artistFactory = $artistFactory;
     }
 
-    public function create(array $values): Artist
+    public function create(ArtistSchema $artistSchema): Artist
     {
+        if ($artistSchema->assertNameIsValid()) {
+            throw new ValidationException('Validation failed', HTTPStatus::BAD_REQUEST, null, ['Missing name key']);
+        }
+
+
         if (isset($values['name']) === false) {
             throw new ValidationException('Validation failed', HTTPStatus::BAD_REQUEST, null, ['Missing name key']);
         }
